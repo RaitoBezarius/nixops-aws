@@ -93,6 +93,7 @@ with import ./lib.nix lib;
     vpcSecurityGroups = mkOption {
       default = null; # default to the default security group of the DB subnet.
       type = types.listOf (types.either types.str (resource "ec2-security-group"));
+      apply = map (x: if builtins.isString x then x else "res-" + x._name);
       description = ''
         List of names of VPCSecurityGroupMembership to authorize on this DBInstance, use this if you are in an VPC and not on EC2-Classic. Not applicable for Amazon Aurora.
         '';
@@ -101,6 +102,7 @@ with import ./lib.nix lib;
     dbSubnetGroup = mkOption {
       default = null;
       type = types.either type.str (resource "ec2-rds-subnet-group");
+      apply = map (x: if builtins.isString x then x else "res-" + x._name);
       description = ''
         A name for a DBSubnetGroup, they must contain at least one subnet in each availability zone in the AWS region.
         '';
